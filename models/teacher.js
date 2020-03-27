@@ -2,6 +2,8 @@ const mongoose = require('mongoose');
 const Joi = require('joi');
 const { Course } = require('../models/course');
 const { Student } = require('../models/student');
+const jwt = require('jsonwebtoken');
+const config = require('config');
 
 const teacherSchema = new mongoose.Schema({
     name: {
@@ -33,13 +35,22 @@ const teacherSchema = new mongoose.Schema({
         type: String,
         minlength: 5,
         maxlength: 255,
-        required: true,
-        trim: true
+        required: true
     },
-    courses: [Course],
-    students: [Student],
+    courses: {
+        type: Array
+    },
+    students: {
+        type: Array
+    },
     
 });
+
+teacherSchema.methods.generateAuthToken = function() {
+    // Genreating web token for authorization
+    const token = jwt.sign({_id: this._id}, config.get('jwtPrivateKey'));
+    return token;
+}
 
 const Teacher = mongoose.model('Teacher', teacherSchema);
 

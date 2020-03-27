@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const Joi = require('joi');
+require('joi-objectid')(Joi);
 const jwt = require('jsonwebtoken');
 const config = require('config');
 const Course = require('../models/course');
@@ -36,10 +37,10 @@ const studentSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    coursesEnrolled: {
+    enrolledCourses: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Course',
-    }
+    }]
 })
 
 studentSchema.methods.generateAuthToken = function() {
@@ -69,6 +70,7 @@ function validateLoginCredentials(student) {
     }
     return Joi.validate(student, schema);
 }
+
 
 module.exports.Student = Student;
 module.exports.validateStudent = validateStudent;

@@ -1,4 +1,4 @@
-console.log('Inside the user router');
+//console.log('Inside the student router');
 
 const bcrypt = require('bcrypt');
 const _ = require('lodash');
@@ -13,16 +13,18 @@ router.get('/', auth, async (req, res) => {
 });
 
 router.post('/', async (req, res) => {
-    const { error } = validateUser(req.body);
+   
+    const { error } = validateStudent(req.body);
     if(error) return res.status(400).send(error.details[0].message);
 
     let student = await Student.findOne({ username: req.body.username });
-    if(student) return res.status(400).send({ message: 'Username already exists. Please try with a different username' });
+    console.log(student);
+    if(student) return res.status(400).send({ message: 'Username already exists' });
 
-    student = await Student.findOne({email: req.body.email});
-    if(student) return res.status(400).send({ message: 'Email already exists. Please try with a different email' });
+    student = await Student.findOne({ email: req.body.email });
+    if(student) return res.status(400).send({ message: 'Email already exists' });
 
-    student = new User(_.pick(req.body, ['name', 'username', 'email', 'password', 'contactNo', 'category']));
+    student = new Student(_.pick(req.body, ['name', 'username', 'email', 'password', 'contactNo']));
 
     const salt = await bcrypt.genSalt(10);
     student.password = await bcrypt.hash(student.password, salt);
