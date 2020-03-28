@@ -1,3 +1,4 @@
+require('express-async-errors');
 const express = require('express');
 const router = express.Router();
 const { Course, validateCourse } = require('../models/course');
@@ -6,7 +7,7 @@ const { Teacher, validateTeacher } = require('../models/teacher');
 const bcrypt = require('bcrypt');
 const _ = require('lodash');
 
-router.get('/', async(req, res) => {
+router.get('/', async(req, res, next) => {
     const teachers = await Teacher
                             .find()
                             .sort('name')
@@ -14,7 +15,7 @@ router.get('/', async(req, res) => {
     res.send(teachers);
 });
 
-router.post('/', async(req, res) => {
+router.post('/', async(req, res, next) => {
 
     const { error } = validateTeacher(req.body);
     if(error) return res.status(400).send(error.details[0].message);

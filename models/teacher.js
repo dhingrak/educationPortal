@@ -37,9 +37,10 @@ const teacherSchema = new mongoose.Schema({
         maxlength: 255,
         required: true
     },
-    courses: {
-        type: Array
-    },
+    courses: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Course'
+    }],
     students: {
         type: Array
     },

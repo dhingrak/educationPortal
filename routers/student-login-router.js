@@ -1,10 +1,11 @@
+require('express-async-errors');
 const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcrypt');
 const { Student, validateLoginCredentials } = require('../models/student');
 
 
-router.post('/', async (req, res) => {
+router.post('/', async (req, res, next) => {
 
     const { error } = validateLoginCredentials(req.body);
     if(error) return res.status(400).send(error.details[0].message);
