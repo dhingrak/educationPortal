@@ -1,2 +1,4 @@
 node_modules/
 config/
+error.log
+combined.log

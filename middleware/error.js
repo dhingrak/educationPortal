@@ -1,7 +1,7 @@
-const logger = require('../startup/logger');
-
+//const logger = require('../utils/logger');
+const winston = require('winston');
 
 module.exports = function (error, req, res, next) {
-    logger(error.message);
+    winston.error(error.message);
     res.status(500).send({ message: 'Internal server error' });
 };

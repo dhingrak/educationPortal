@@ -4,7 +4,7 @@ const router = express.Router();
 const { Course, validateCourse } = require('../models/course');
 const { Teacher } = require('../models/teacher');
 const auth = require('../middleware/auth');
-const logger = require('../startup/logger');
+const logger = require('../utils/logger');
 
 router.get('/', async (req, res, next) => {
    const courses = await Course.find().sort('name');

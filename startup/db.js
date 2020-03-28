@@ -1,10 +1,12 @@
 const mongoose = require('mongoose');
 const config = require('config');
+//const logger = require('../utils/logger');
+const winston = require('winston');
 
-mongoose.connect(config.get('MONGODB_URL'), {useNewUrlParser: true, useUnifiedTopology: true})
+mongoose.connect(config.get('MONGODB_URL'), {useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true})
     .then(() => {
-        console.log('Successfully connected to the database');
+        winston.info('Successfully connected to the database');
     })
     .catch((error) => {
-        console.log('Unable to connect to the database');
+        winston.error('Unable to connect to the database');
     })

@@ -1,13 +1,14 @@
 const express = require('express');
 const app = express();
+//const logger = require('./utils/logger');
+const wisnton = require('winston');
+
 
 require('./startup/routes')(app);
 require('./startup/db');
-require('./startup/logger');
-
-
+require('./utils/logger');
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, (req, res) => {
-    console.log(`Server is up on port ${PORT} `);
+    wisnton.info(`Server is up on port ${PORT} `);
 });

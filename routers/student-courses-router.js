@@ -39,9 +39,6 @@ router.post('/registerCourse', auth, async (req, res, next) => {
         res.send(course);
     }
     
-
-    
-   
     
 })
 module.exports = router;
