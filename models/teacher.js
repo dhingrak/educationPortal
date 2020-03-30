@@ -41,9 +41,10 @@ const teacherSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Course'
     }],
-    students: {
-        type: Array
-    },
+    students: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Student'
+    }]
     
 });
 
@@ -66,7 +67,16 @@ function validateTeacher(teacher){
     return Joi.validate(teacher, schema);
 }
 
+function validateLoginCredentials(teacher) {
+    const schema = {
+        username: Joi.string().required(),
+        password: Joi.string().regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[~!@#$%^&*?])[a-zA-Z\d~!@#$%^&*?]{6,}$/).required()
+    }
+    return Joi.validate(teacher, schema);
+}
+
 module.exports = {
     Teacher,
-    validateTeacher
+    validateTeacher,
+    validateLoginCredentials
 }

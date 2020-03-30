@@ -7,13 +7,6 @@ const { Teacher, validateTeacher } = require('../models/teacher');
 const bcrypt = require('bcrypt');
 const _ = require('lodash');
 
-router.get('/', async(req, res, next) => {
-    const teachers = await Teacher
-                            .find()
-                            .sort('name')
-                            .select(['name', 'courses', 'students', 'department']);
-    res.send(teachers);
-});
 
 router.post('/', async(req, res, next) => {
 

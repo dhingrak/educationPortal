@@ -16,7 +16,7 @@ const courseSchema = new mongoose.Schema({
         required: true,
         enum: ['web', 'mobile', 'networks', 'programming', 'business', 'political', 'database']
     },
-    author: {
+    teacher: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Teacher',
         required: true
@@ -25,8 +25,9 @@ const courseSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Student'
     }],
-    courseContent: {
-        type: String
+    contents: {
+        type: String,
+        required: true
     }
 
 })
@@ -36,7 +37,8 @@ const Course = mongoose.model('Course', courseSchema);
 function validateCourse(course){
     const schema = {
         courseName: Joi.string().min(5).max(255).required(),
-        category: Joi.string().valid(['web', 'mobile', 'networks', 'programming', 'business', 'political', 'database']).required()
+        category: Joi.string().valid(['web', 'mobile', 'networks', 'programming', 'business', 'political', 'database']).required(),
+        contents: Joi.string().required()
     }
     return Joi.validate(course, schema);
 }

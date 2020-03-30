@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const Joi = require('joi');
-require('joi-objectid')(Joi);
+Joi.ObjectId = require('joi-objectid')(Joi);
 const jwt = require('jsonwebtoken');
 const config = require('config');
 const Course = require('../models/course');

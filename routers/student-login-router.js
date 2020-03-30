@@ -10,7 +10,7 @@ router.post('/', async (req, res, next) => {
     const { error } = validateLoginCredentials(req.body);
     if(error) return res.status(400).send(error.details[0].message);
 
-    let student = await Student.findOne({username: req.body.username});
+    let student = await Student.findOne({email: req.body.email});
     if(!student) return res.status(400).send({ message: 'Invalid username or password'});
 
     const validatePassword = bcrypt.compare(req.body.password, student.password);
