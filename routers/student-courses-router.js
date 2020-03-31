@@ -4,6 +4,7 @@ const router = express.Router();
 const { Student } = require('../models/student');
 const { Course, validateCourseId } = require('../models/course');
 const auth = require('../middleware/auth');
+const _ = require('lodash');
 
 
 router.get('/me', auth, async (req, res, next) => {
@@ -36,7 +37,7 @@ router.post('/registerCourse', auth, async (req, res, next) => {
         const student = await Student.findById(req.user._id);
         student.enrolledCourses.push(course._id);
         await student.save();
-        res.send(course);
+        res.send(_.pick(course, [ 'courseName', 'category', 'contents' ]));
     }
     
     

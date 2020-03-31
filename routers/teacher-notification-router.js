@@ -3,10 +3,9 @@ const express = require('express');
 const router = express.Router();
 const { Notification, validateNotification, validateUpdateNotification } = require('../models/notification');
 const { Teacher } = require('../models/teacher');
-
 const auth = require('../middleware/auth');
 
-
+/* Get all the notifcations posted by a teacher */
 
 router.get('/', auth, async (req, res, next) => {
     const teacherId = req.user._id;
