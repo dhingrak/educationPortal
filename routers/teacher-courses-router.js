@@ -7,13 +7,13 @@ const auth = require('../middleware/auth');
 
 /* GET all the courses created by a teacher */
 
-router.get('/', auth, async (req, res, next) => {
-   const courses = await Teacher.findById(req.user._id)
-                                .populate('courses')
-                                .select('courses')
-   res.send(courses);
+// router.get('/', auth, async (req, res, next) => {
+//    const courses = await Teacher.findById(req.user._id)
+//                                 .populate('courses')
+//                                 .select('courses')
+//    res.send(courses);
 
-})
+// })
 
 /* POST a new course by a teacher for students */
 

@@ -35,10 +35,10 @@ router.get('/me/notifications', auth, async (req, res, next) => {
     
     const studentId = req.user._id;
     const student = await Student.findById(studentId);
-    console.log(student.enrolledCourses);
     const notifications = await Notification.find({ course: student.enrolledCourses});
 
     // Iterating the notifications array and extarcting the required fields 
+    console.log(notifications);
     res.send(_.map(notifications, _.partialRight(_.pick, [ 'course', 'title', 'content' ])));
 })
 
