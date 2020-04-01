@@ -6,6 +6,7 @@ const { Course, validateCourseId } = require('../models/course');
 const { Teacher } = require('../models/teacher'); 
 const auth = require('../middleware/auth');
 const _ = require('lodash');
+const mongoose = require('mongoose');
 
 
 router.get('/me', auth, async (req, res, next) => {
@@ -31,22 +32,36 @@ router.post('/registerCourse', auth, async (req, res, next) => {
     // Note: Need to add the transaction
   
     const enrolled = course.enrolledStudents.includes(studentId);
+    const session = await mongoose.startSession();
     if(!enrolled){
-        course.enrolledStudents.push(req.user._id);
-        await course.save();
+       
+        try {
+            session.startTransaction();
+            const opts = { session, new: true };
+            course.enrolledStudents.push(req.user._id);
+            await course.save(opts);
+            
+            //throw new error('Exception occoured');
+            const student = await Student.findById(req.user._id);
+            student.enrolledCourses.push(course._id);
+            await student.save(opts); 
 
-        const student = await Student.findById(req.user._id);
-        student.enrolledCourses.push(course._id);
-        await student.save(); 
+            const teacher = await Teacher.findById(course.teacher);
+            // console.log(teacher.students);
+            if(!teacher.students.includes(studentId)){
+                teacher.students.push(studentId);
+            }
+            await teacher.save(opts);
 
-        const teacher = await Teacher.findById(course.teacher);
-       // console.log(teacher.students);
-        if(!teacher.students.includes(studentId)){
-            teacher.students.push(studentId);
+            await session.commitTransaction();
+            session.endSession();
+            res.send(_.pick(course, [ 'courseName', 'category', 'contents' ]));
+        }catch(error) {
+            await session.abortTransaction();
+            session.endSession();
+            throw error;
         }
-        await teacher.save();
-
-        res.send(_.pick(course, [ 'courseName', 'category', 'contents' ]));
+        
     }
     else {
         res.status(400).send({ message: 'Student already registered in this course' });

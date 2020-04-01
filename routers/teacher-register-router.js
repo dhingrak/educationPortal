@@ -1,8 +1,6 @@
 require('express-async-errors');
 const express = require('express');
 const router = express.Router();
-const { Course, validateCourse } = require('../models/course');
-const { Student } = require('../models/student');
 const { Teacher, validateTeacher } = require('../models/teacher');
 const bcrypt = require('bcrypt');
 const _ = require('lodash');
