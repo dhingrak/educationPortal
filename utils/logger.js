@@ -1,23 +1,43 @@
 const fs = require('fs');
-var Logger = {};
-var infoStream = fs.createWriteStream("logs/info.txt", { flags: 'a' });
-var debugStream = fs.createWriteStream("logs/debug.txt", { flags: 'a' });
-var errorStream = fs.createWriteStream("logs/error.txt", { flags: 'a' });
+var dir = 'logs';
 
-Logger.info = function (msg, errorStack) {
-    var message = new Date().toUTCString() + " | " + "INFO"  + " | " +  msg + "\n";
-    infoStream.write(message);
+class Logger {
+    infoStream;
+    debugStream;
+    errorStream;
+
+    constructor(){
+        if(!fs.existsSync(dir)){
+            fs.mkdirSync(dir);
+        }
+    }
+
+    getDate() {
+        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        const date = new Date().toLocaleDateString(undefined, options);
+        const time = new Date().toLocaleTimeString();
+        return `${date} ${time}`;
+    }
+
+    info(message) {
+        this.infoStream = fs.createWriteStream("logs/info.txt", { flags: 'a' });
+        message = `${this.getDate()} | INFO | ${message} \n`;
+        this.infoStream.write(message);
+    }
+
+    debug(message) {
+        this.debugStream = fs.createWriteStream("logs/debug.txt", { flags: 'a' });
+        message = `${this.getDate()}| DEBUG | ${message} \n`;
+        this.debugStream.write(message);
+    }
+
+    error(message) {
+        this.errorStream = fs.createWriteStream("logs/error.txt", { flags: 'a' });
+        message = `${this.getDate()} | ERROR | ${message} \n`;
+        this.errorStream.write(message);
+    }
 }
 
-Logger.debug = function (msg, errorStack) {
-    var message = new Date().toUTCString() + " | " + "DEBUG" + " | " + msg + "\n";
-    debugStream.write(message);
-}
+const logger = new Logger();
 
-Logger.error = function (msg, errorStack) {
-    var message = new Date().toUTCString() + " | " + "ERROR" + " | " +  msg + " | " + errorStack + "\n";
-    errorStream.write(message);
- }
-
-module.exports = Logger;
-  
+module.exports = logger;
