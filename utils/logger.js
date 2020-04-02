@@ -1,28 +1,23 @@
-// const winston = require('winston');
+const fs = require('fs');
+var Logger = {};
+var infoStream = fs.createWriteStream("logs/info.txt", { flags: 'a' });
+var debugStream = fs.createWriteStream("logs/debug.txt", { flags: 'a' });
+var errorStream = fs.createWriteStream("logs/error.txt", { flags: 'a' });
 
-// // Logs the messages to the console as well as in the file
-// module.exports = function(message){
+Logger.info = function (msg, errorStack) {
+    var message = new Date().toUTCString() + " | " + "INFO"  + " | " +  msg + "\n";
+    infoStream.write(message);
+}
 
-//    //winston.add(winston.transports.File, { filename: 'logfile.log' });
-//     winston.log(message);
-//    // winston.Console(`${new Date()} : ${message}`)
-// }
+Logger.debug = function (msg, errorStack) {
+    var message = new Date().toUTCString() + " | " + "DEBUG" + " | " + msg + "\n";
+    debugStream.write(message);
+}
 
-const winston = require('winston');
-const logger = winston.createLogger({
-    level: 'info',
-    format: winston.format.json(),
-    defaultMeta: { service: 'user-service' },
-    transports: [
-      //
-      // - Write to all logs with level `info` and below to `combined.log` 
-      // - Write all logs error (and below) to `error.log`.
-      //
-      new winston.transports.Console(),
-      new winston.transports.File({ filename: 'error.log', level: 'error' }),
-      new winston.transports.File({ filename: 'combined.log' })
-    ]
-  });
+Logger.error = function (msg, errorStack) {
+    var message = new Date().toUTCString() + " | " + "ERROR" + " | " +  msg + " | " + errorStack + "\n";
+    errorStream.write(message);
+ }
 
-  winston.add(logger);
+module.exports = Logger;
   

@@ -1,7 +1,6 @@
 const express = require('express');
 const app = express();
-//const logger = require('./utils/logger');
-const wisnton = require('winston');
+const logger = require('./utils/logger');
 
 
 require('./startup/routes')(app);
@@ -10,5 +9,5 @@ require('./utils/logger');
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, (req, res) => {
-    wisnton.info(`Server is up on port ${PORT} `);
+    logger.info(`Server is up on port ${PORT} `);
 });
