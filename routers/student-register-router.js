@@ -1,4 +1,4 @@
-//console.log('Inside the student router');
+
 require('express-async-errors');
 const bcrypt = require('bcrypt');
 const _ = require('lodash');

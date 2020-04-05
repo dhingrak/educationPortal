@@ -1,35 +1,43 @@
 const mongoose = require('mongoose');
 const Joi = require('joi');
-const { Course } = require('../models/course');
-const { Student } = require('../models/student');
+Joi.objectId = require('joi-objectid')(Joi);
 const jwt = require('jsonwebtoken');
 const config = require('config');
 
 const teacherSchema = new mongoose.Schema({
-    name: {
+    firstName: {
         type: String,
         minlength: 5,
         maxlength: 255,
         trim: true,
         required: true,        
     },
+    lastName: {
+        type: String,
+        minlength: 5,
+        maxlength: 255,
+        trim: true,
+        required: true
+    },
     username: {
         type: String,
         minlength: 5,
-        maxlength: 50,
+        maxlength: 255,
         required: true,
         trim: true
     },
     email: {
         type: String,
         minlength: 5,
-        maxlength: 50,
+        maxlength: 255,
         unique: true,
         required: true
     },
     password: {
         type: String,
-        required: true
+        required: true,
+        minlength: 5,
+        maxlength: 1024
     },
     department: {
         type: String,
@@ -45,7 +53,6 @@ const teacherSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Student'
     }]
-    
 });
 
 teacherSchema.methods.generateAuthToken = function() {
@@ -58,7 +65,8 @@ const Teacher = mongoose.model('Teacher', teacherSchema);
 
 function validateTeacher(teacher){
     const schema = {
-        name: Joi.string().min(5).max(255).required(),
+        firstName: Joi.string().min(5).max(255).required(),
+        lastName: Joi.string().min(5).max(255).required(),
         username: Joi.string().min(5).max(255).required(),
         email: Joi.string().email().required(),
         password: Joi.string().regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[~!@#$%^&*?])[a-zA-Z\d~!@#$%^&*?]{6,}$/).required(),
@@ -70,13 +78,34 @@ function validateTeacher(teacher){
 function validateLoginCredentials(teacher) {
     const schema = {
         username: Joi.string().required(),
-        password: Joi.string().regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[~!@#$%^&*?])[a-zA-Z\d~!@#$%^&*?]{6,}$/).required()
+        password: Joi.string().min(5).max(1024).required()
     }
     return Joi.validate(teacher, schema);
+}
+
+function validateUpdateTeacher(teacher) {
+    const schema = {
+        id: Joi.objectId(),
+        firstName: Joi.string().min(5).max(255).required(),
+        lastName: Joi.string().min(5).max(255).required(),
+        username: Joi.string().min(5).max(255).required(),
+        email: Joi.string().email().required(),
+        department: Joi.string().min(5).max(255).required()
+    }
+    return Joi.validate(teacher, schema);
+}
+
+function validateObjectId(id) {
+    const schema = {
+        id: Joi.objectId()
+    }
+    return Joi.validate(id, schema);
 }
 
 module.exports = {
     Teacher,
     validateTeacher,
-    validateLoginCredentials
+    validateLoginCredentials,
+    validateUpdateTeacher,
+    validateObjectId
 }

@@ -23,7 +23,7 @@ router.post('/', async(req, res, next) => {
     teacher.password = await bcrypt.hash(teacher.password, salt);
 
     const token = teacher.generateAuthToken();
-    teacher.save();
+    await teacher.save();
     res.header('x-auth-token', token).send(_.pick(teacher, ['name', 'username', 'email']));
 });
 

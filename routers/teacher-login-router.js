@@ -5,7 +5,7 @@ const { Teacher, validateLoginCredentials } = require('../models/teacher');
 const bcrypt = require('bcrypt');
 
 
-/* Login */
+/* POST: Verify the teacher login credentials */
 
 router.post('/', async (req, res, next) => {
     const { error } = validateLoginCredentials(req.body);
@@ -14,12 +14,14 @@ router.post('/', async (req, res, next) => {
     let teacher = await Teacher.findOne({username: req.body.username});
     if(!teacher) return res.status(400).send({ message: 'Invalid username or password'});
 
-    const validatePassword = bcrypt.compare(req.body.password, teacher.password);
+    const validatePassword = await bcrypt.compare(req.body.password, teacher.password);
     if(!validatePassword) {
         return res.status(400).send({ message: 'Invalid username or password' });
     }
 
     const token = teacher.generateAuthToken();
     res.header('x-auth-token', token).send({ message: 'Logged in successfully' })
-})
+});
+
+
 module.exports = router;

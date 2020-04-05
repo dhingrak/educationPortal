@@ -6,6 +6,7 @@ const { Student } = require('../models/student');
 const { Notification } = require('../models/notification');
 const auth = require('../middleware/auth');
 const _ = require('lodash');
+const sendEmail = require('../utils/email');
 
 /* GET: Get the profile information of a student */
 

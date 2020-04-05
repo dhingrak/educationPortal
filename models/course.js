@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const Joi = require('joi');
-Joi.objectId = require('joi-objectid')(Joi);
+
 const { Student } = require('../models/student');
 
 const courseSchema = new mongoose.Schema({
@@ -27,7 +27,9 @@ const courseSchema = new mongoose.Schema({
     }],
     contents: {
         type: String,
-        required: true
+        required: true,
+        minlength: 5,
+        maxlength: 1056
     }
 
 })
@@ -38,7 +40,7 @@ function validateCourse(course){
     const schema = {
         courseName: Joi.string().min(5).max(255).required(),
         category: Joi.string().valid(['web', 'mobile', 'networks', 'programming', 'business', 'political', 'database']).required(),
-        contents: Joi.string().required()
+        contents: Joi.string().min(5).max(1024).required()
     }
     return Joi.validate(course, schema);
 }

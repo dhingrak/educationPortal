@@ -13,8 +13,8 @@ class Logger {
     }
 
     getDate() {
-        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-        const date = new Date().toLocaleDateString(undefined, options);
+        //const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        const date = new Date().toDateString();
         const time = new Date().toLocaleTimeString();
         return `${date} ${time}`;
     }

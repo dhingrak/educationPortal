@@ -14,6 +14,8 @@ router.get('/', auth, async (req, res, next) => {
    
 })
 
+/* Get all the notifications against a particular course */ 
+
 /* Creating a notification against a course */
 
 router.post('/', auth, async (req, res, next) => {

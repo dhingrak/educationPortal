@@ -18,9 +18,12 @@ router.get('/me', auth, async(req, res, next) => {
 
 router.get('/me/courses', auth, async (req, res, next) => {
     const teacherId = req.user._id;
-    const courses = await Teacher.findById(teacherId).populate('courses').select('courses');
+    const teacher = await Teacher.findById(teacherId).populate('courses');
+    
+    // 
+    if(!teacher.courses.length) return res.status(400).send({ message: 'No courses exists' });
 
-    res.send(courses);
+    res.send(_.pick(teacher, ['courses']));
 
 })
 
@@ -29,6 +32,8 @@ router.get('/me/courses', auth, async (req, res, next) => {
 router.get('/me/students', auth, async (req, res, next) => {
     const teacherId = req.user._id;
     const teacher = await Teacher.findById(teacherId).populate('students');
+
+    if(!teacher.students.length) return res.status(400).send({ message: 'No students enrolled' });
 
     // Iterating the students array and extarcting the required fields 
     res.send(_.map(teacher.students, _.partialRight(_.pick, [ 'name', 'username', 'email', 'contactNo' ])));
