@@ -4,6 +4,7 @@ const router = express.Router();
 const { Course, validateCourse } = require('../models/course');
 const { Teacher } = require('../models/teacher');
 const auth = require('../middleware/auth');
+const _ = require('lodash');
 
 
 router.post('/createCourse', auth, async(req, res, next) => {
@@ -25,9 +26,10 @@ router.post('/createCourse', auth, async(req, res, next) => {
     await course.save();
 
     // Updating the teacher collection with the new course added
-    const teacher = await Teacher.findOneAndUpdate({ _id: teacherId }, { $push: { courses: course._id }});
+    let teacher = await Teacher.findOneAndUpdate({ _id: teacherId }, { $push: { courses: course._id }});
     await teacher.save();
 
+    course = _.pick(course, [ 'courseName', 'category', 'contents']);
     res.send(course);
 })
 

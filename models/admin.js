@@ -5,7 +5,14 @@ const jwt = require('jsonwebtoken');
 const config = require('config');
 
 const adminSchema = new mongoose.Schema({
-    name: {
+    firstName: {
+        type:String,
+        minlength: 5,
+        maxlength: 255,
+        required: true,
+        trim: true
+    },
+    lastName: {
         type:String,
         minlength: 5,
         maxlength: 255,
@@ -49,7 +56,8 @@ const Admin = mongoose.model('Admin', adminSchema);
 
 function validateAdmin(admin){
     const schema = {
-        name: Joi.string().min(5).max(255).required(),
+        firstName: Joi.string().min(5).max(255).required(),
+        lastName: Joi.string().min(5).max(255).required(),
         username: Joi.string().min(5).max(255).required(),
         email: Joi.string().email().required(),
         password: Joi.string().regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[~!@#$%^&*?])[a-zA-Z\d~!@#$%^&*?]{6,}$/).required(),

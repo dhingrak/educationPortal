@@ -1,3 +1,4 @@
+require('express-async-errors');
 const mongoose = require('mongoose');
 const Joi = require('joi');
 Joi.objectId = require('joi-objectid')(Joi);
@@ -45,6 +46,10 @@ const teacherSchema = new mongoose.Schema({
         maxlength: 255,
         required: true
     },
+    phoneNumber: {
+        type: String,
+        required: true
+    },
     courses: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Course'
@@ -70,7 +75,8 @@ function validateTeacher(teacher){
         username: Joi.string().min(5).max(255).required(),
         email: Joi.string().email().required(),
         password: Joi.string().regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[~!@#$%^&*?])[a-zA-Z\d~!@#$%^&*?]{6,}$/).required(),
-        department: Joi.string().min(5).max(255).required()
+        department: Joi.string().min(5).max(255).required(),
+        phoneNumber: Joi.string().regex(/^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]\d{3}[\s.-]\d{4}$/).required()
     }
     return Joi.validate(teacher, schema);
 }
@@ -85,12 +91,12 @@ function validateLoginCredentials(teacher) {
 
 function validateUpdateTeacher(teacher) {
     const schema = {
-        id: Joi.objectId(),
         firstName: Joi.string().min(5).max(255).required(),
         lastName: Joi.string().min(5).max(255).required(),
         username: Joi.string().min(5).max(255).required(),
         email: Joi.string().email().required(),
-        department: Joi.string().min(5).max(255).required()
+        department: Joi.string().min(5).max(255).required(),
+        phoneNumber: Joi.string().regex(/^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]\d{3}[\s.-]\d{4}$/).required()
     }
     return Joi.validate(teacher, schema);
 }

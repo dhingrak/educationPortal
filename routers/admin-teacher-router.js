@@ -1,7 +1,6 @@
 require('express-async-errors');
 const express = require('express');
 const router = express.Router();
-const { Admin } = require('../models/admin');
 const { Teacher, validateTeacher, validateUpdateTeacher, validateObjectId } = require('../models/teacher');
 const auth = require('../middleware/auth');
 const admin = require('../middleware/admin');
@@ -10,9 +9,36 @@ const bcrypt = require('bcrypt');
 
 // Only admin has the access to access these routers
 
-// POST: Creating a new Teacher user 
 
-router.post('/registerTeacher', [auth, admin], async (req, res, next) => {
+// GET: Filter the teachers according to their department
+router.get('/' , [auth, admin], async (req, res, next) => {
+
+    if(Object.keys(req.query).length == 0) {
+        let teachers = await Teacher.find().select('firstName lastName username email department');
+        return res.send(teachers);
+    }
+
+    let teachers = await Teacher.find({ department: _.lowerCase(req.query.department) }).select('firstName lastName username email department');
+    res.send(teachers);
+});
+
+// Need to add more filters on the Teacher extraction
+
+// GET: Get the profile of an existing teacher
+router.get('/:id', [auth, admin], async (req, res, next) => {
+
+    const { error } = validateObjectId({ id: req.params.id });
+    if(error) return res.status(400).send('Invalid object id');
+
+    let teacher = await Teacher.findOne({ _id: req.params.id })
+                               .populate('courses');
+    teacher = _.pick(teacher, ['firstName', 'lastName', 'username', 'email', 'department', 'courses']);
+    res.send(teacher);
+
+});
+
+// POST: Creating a new Teacher user 
+router.post('/', [auth, admin], async (req, res, next) => {
 
     const { error } = validateTeacher(req.body);
     if(error) return res.status(400).send(error.details[0].message);
@@ -23,19 +49,18 @@ router.post('/registerTeacher', [auth, admin], async (req, res, next) => {
     teacher = await Teacher.findOne({ email: req.body.email });
     if(teacher) return res.status(400).send({ message: 'Email already taken' });
 
-    teacher = new Teacher(_.pick(req.body, ['firstName', 'lastName', 'username', 'email', 'password', 'department']));
+    teacher = new Teacher(_.pick(req.body, ['firstName', 'lastName', 'username', 'email', 'password', 'department', 'phoneNumber']));
 
     const salt = await bcrypt.genSalt(10);
     teacher.password = await bcrypt.hash(teacher.password, salt);
 
     await teacher.save();
-    teacher = _.pick(teacher, ['name', 'username', 'email']);
+    teacher = _.pick(teacher, ['firstName', 'lastName', 'username', 'email', 'department']);
     res.send(teacher);
-})
+});
 
 // PUT: Updating an existing Teacher user
-
-router.put('/updateTeacher/:id', [auth, admin], async (req, res, next) => {
+router.put('/:id', [auth, admin], async (req, res, next) => {
 
     // TODO: Need to combine the URL and body validations in one function
     const validateId = validateObjectId({ id: req.params.id });
@@ -49,7 +74,8 @@ router.put('/updateTeacher/:id', [auth, admin], async (req, res, next) => {
         lastName: req.body.lastName,
         username: req.body.username,
         email: req.body.email,
-        department: req.body.department
+        department: req.body.department,
+        phoneNumber: req.body.phoneNumber
     }, {new: true} );
 
     if(!teacher) return res.status(400).send({ message: 'Invalid teacher id' });
@@ -60,8 +86,7 @@ router.put('/updateTeacher/:id', [auth, admin], async (req, res, next) => {
 
 // DELETE: Delete an existing teacher
 // TODO: Need to check what happend to the courses if the teacher is deleted by Admin
-
-router.delete('/deleteTeacher/:id', [auth, admin], async (req, res, next) => {
+router.delete('/:id', [auth, admin], async (req, res, next) => {
 
     const { error } = validateObjectId({ id: req.params.id });
     if(error) return res.status(400).send('Invalid object id');
@@ -73,6 +98,5 @@ router.delete('/deleteTeacher/:id', [auth, admin], async (req, res, next) => {
     res.send(teacher);
 
 });
-
 
 module.exports = router;
