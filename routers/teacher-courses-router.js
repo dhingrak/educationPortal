@@ -3,10 +3,13 @@ const express = require('express');
 const router = express.Router();
 const { Course, validateCourse } = require('../models/course');
 const { Teacher } = require('../models/teacher');
+const { Student } = require('../models/student');
 const auth = require('../middleware/auth');
 const _ = require('lodash');
+const sendEmail = require("../utils/email");
 
 
+// POST: Creating a new course
 router.post('/createCourse', auth, async(req, res, next) => {
 
     const teacherId = req.user._id;
@@ -22,7 +25,6 @@ router.post('/createCourse', auth, async(req, res, next) => {
         teacher: req.user._id,
         contents: req.body.contents
     });
-
     await course.save();
 
     // Updating the teacher collection with the new course added
@@ -31,11 +33,11 @@ router.post('/createCourse', auth, async(req, res, next) => {
 
     course = _.pick(course, [ 'courseName', 'category', 'contents']);
     res.send(course);
-})
+});
 
-/* UPDATE the course created by a teacher */ 
 
-router.post('/updateCourse/:id', auth, async (req, res, next) => {
+// PUT: Update the course created by a teacher
+router.put('/updateCourse/:id', auth, async (req, res, next) => {
 
     const teacherId =  req.user._id;
     const { error } = validateCourse(req.body);
@@ -52,19 +54,48 @@ router.post('/updateCourse/:id', auth, async (req, res, next) => {
                                                     contents: req.body.contents}, {new: true});
 
     res.send(course);
-})
-router.post('/deleteCourse/:id', auth, async (req, res, next) => {
+});
+
+
+// DELETE: Delete an existing course and make sure the students are removed who enrolled in this course, 
+// as well as delete course from teacher collection
+router.delete('/deleteCourse/:id', auth, async (req, res, next) => {
 
     const teacherId = req.user._id;
+    const courseId = req.params.id;
 
-    // verifing the teacher can delete only their own course
-    const course = await Course.findOne( { $and: [ { _id: req.params.id }, { teacher: teacherId }]});
+    // verifing the teacher cannot delete other user courses
+    let course = await Course.findOneAndDelete( { $and: [ { _id: req.params.id }, { teacher: teacherId }]});
     if(!course) return res.status(400).send({ message: 'Invalid course id' });
 
-    // Delete the course as per their ID and 
-    // make sure the course is removed from the students collection as well as teacher collection
+    // Removing course from the teacher collection
+    let teacher = await Teacher.findOne({ _id: teacherId });
+    const courseIndex = teacher.courses.indexOf(courseId);
+    teacher.courses.splice(courseIndex, 1);
+    await teacher.save();
 
+    // Removing course from student enrolledCourses array
+    for(let i=0; i < course.enrolledStudents.length; i++) {
 
-})
+        let studentId = course.enrolledStudents[i];
+        let student = await Student.findOne({ _id: studentId });
+        let courseIndex = student.enrolledCourses.indexOf(courseId);
+        student.enrolledCourses.splice(courseIndex, 1);
+        await student.save();
+
+        // Sending email to student for enrolling in this course
+        const emailObject = {
+            course: course.courseName,
+            email: student.email,
+            firstName: student.firstName,
+            lastName: student.lastName,
+            body: `Sorry to inform you, ${teacher.firstName} ${teacher.lastName} removed the ${course.courseName} course`
+        }
+        sendEmail(emailObject);   
+    }
+    res.send({ message: 'Course deleted successfully', course: course });
+
+});
+
 
 module.exports = router;

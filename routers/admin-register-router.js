@@ -7,9 +7,11 @@ const auth = require('../middleware/auth');
 const admin = require('../middleware/admin');
 const bcrypt = require('bcrypt');
 
-/* Only admin user can create another admin as per requirements */
-// TODO: Need to add the auth and admin middleware to restrict the router to admin only
-router.post('/',  async (req, res, next) => {
+
+// Only admin user can create another admin as per requirements 
+
+// POST: Only the admin level user can create another admin
+router.post('/', [auth, admin], async (req, res, next) => {
 
     const { error } = validateAdmin(req.body);
     if(error) return res.status(400).send(error.details[0].message);
@@ -29,7 +31,7 @@ router.post('/',  async (req, res, next) => {
     const token = user.generateAuthToken();
     user.save();
     res.header('x-auth-token', token).send(_.pick(user, ['name', 'username', 'email', 'isAdmin']));
-})
+});
 
 
 module.exports = router;

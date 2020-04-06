@@ -3,20 +3,22 @@ const nodemailer = require('nodemailer')
 const config = require('config')
 const logger = require('../utils/logger');
 
+// Creating a transport for sending email
 var transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
         user: config.get('email'),
         pass: config.get('password')
     }
-})
+});
 
+// Sending an email
 const sendEmail = (emailObject) => {
     var mailOptions = {
         from: config.get('email'),
         to: emailObject.email,
         subject: `${emailObject.course}`,
-        text: `Hi ${emailObject.name} \n\nCongratulations you are successfully enrolled in ${emailObject.course} course. Let us know if you have any concers.
+        text: `Hi ${emailObject.firstName} \n\n ${emailObject.body}. Let us know if you have any concers.
                     \n\nRegards \nuauthentication Team`
     }
 
@@ -28,6 +30,7 @@ const sendEmail = (emailObject) => {
             logger.info('Email sent successfully ' + info.response)
         }
     })
-}
+};
+
 
 module.exports = sendEmail

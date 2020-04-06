@@ -4,7 +4,7 @@ const router = express.Router();
 const bcrypt = require('bcrypt');
 const { Student, validateLoginCredentials } = require('../models/student');
 
-
+// POST: Login router
 router.post('/', async (req, res, next) => {
 
     const { error } = validateLoginCredentials(req.body);
@@ -20,5 +20,7 @@ router.post('/', async (req, res, next) => {
 
     const token = student.generateAuthToken();
     res.header('x-auth-token', token).send({ message: 'Logged in successfully' })
-})
+});
+
+
 module.exports = router;

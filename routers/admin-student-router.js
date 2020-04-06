@@ -7,12 +7,13 @@ const _ = require('lodash');
 const bcrypt = require('bcrypt');
 const { Student, validateObjectId, validateStudent, validateUpdateStudent } = require('../models/student');
 
+
 // Only admin has the access to access these routers
 
 // GET: Get all the students 
 router.get('/', [auth, admin], async (req, res, next) => {
     
-    let students = await Student.find(). select('firstName lastName username email, phoneNumber');
+    const students = await Student.find(). select('firstName lastName username email, phoneNumber');
     res.send(students);
 });
 

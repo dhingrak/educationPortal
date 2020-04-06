@@ -22,7 +22,8 @@ router.get('/' , [auth, admin], async (req, res, next) => {
     res.send(teachers);
 });
 
-// Need to add more filters on the Teacher extraction
+// TODO: Need to add more filters on the Teacher extraction
+
 
 // GET: Get the profile of an existing teacher
 router.get('/:id', [auth, admin], async (req, res, next) => {
@@ -83,6 +84,7 @@ router.put('/:id', [auth, admin], async (req, res, next) => {
     teacher = _.pick(teacher, [ 'firstName', 'lastName', 'username', 'email', 'department' ]);
     res.send(teacher);
 });
+
 
 // DELETE: Delete an existing teacher
 // TODO: Need to check what happend to the courses if the teacher is deleted by Admin

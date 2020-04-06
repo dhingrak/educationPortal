@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 const Joi = require('joi');
-
 const { Student } = require('../models/student');
 
 const courseSchema = new mongoose.Schema({
@@ -31,7 +30,6 @@ const courseSchema = new mongoose.Schema({
         minlength: 5,
         maxlength: 1056
     }
-
 })
 
 const Course = mongoose.model('Course', courseSchema);

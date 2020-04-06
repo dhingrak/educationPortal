@@ -9,8 +9,7 @@ const mongoose = require("mongoose");
 const sendEmail = require("../utils/email");
 
 
-/* POST - Register a student to a course created by a Professor */
-
+// POST - Register a student against an existing course
 router.post("/registerCourse", auth, async (req, res, next) => {
   const studentId = req.user._id;
   const { error } = validateCourseId(req.body);
@@ -62,7 +61,6 @@ router.post("/registerCourse", auth, async (req, res, next) => {
       course.enrolledStudents.push(req.user._id);
       await course.save();
 
-      //throw new error('Exception occoured');
       const student = await Student.findById(req.user._id);
       student.enrolledCourses.push(course._id);
       await student.save();
@@ -77,9 +75,10 @@ router.post("/registerCourse", auth, async (req, res, next) => {
       // Sending email to student for enrolling in this course
       const emailObject = {
         course: course.courseName,
-        category: course.category,
         email: student.email,
-        name: student.name
+        firstName: student.firstName,
+        lastName: student.lastName,
+        body: `Congratulations you are successfully enrolled in ${course.courseName} course`
       }
       sendEmail(emailObject);
 
@@ -89,4 +88,6 @@ else {
     res.status(400).send({ message: "Student already registered in this course" });
   }
 });
+
+
 module.exports = router;

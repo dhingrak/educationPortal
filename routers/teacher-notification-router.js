@@ -5,20 +5,21 @@ const { Notification, validateNotification, validateUpdateNotification } = requi
 const { Teacher } = require('../models/teacher');
 const auth = require('../middleware/auth');
 
-/* Get all the notifcations posted by a teacher */
-
+// GET: Get all the notifcations posted by a teacher 
 router.get('/', auth, async (req, res, next) => {
+
     const teacherId = req.user._id;
     const notifications = await Notification.find({ teacher: teacherId });
     res.send(notifications);
    
-})
+});
 
-/* Get all the notifications against a particular course */ 
+// TODO: Get all the notifications against a particular course 
 
-/* Creating a notification against a course */
 
+// POST: Creating a notification against a course 
 router.post('/', auth, async (req, res, next) => {
+
     const teacherId = req.user._id;
     const { error } = validateNotification(req.body);
     if(error) return res.status(400).send(error.details[0].message);
@@ -37,8 +38,8 @@ router.post('/', auth, async (req, res, next) => {
     res.send(notification);
 });
 
-/* Updating the course notification */
 
+// PUT: Updating the course notification
 router.put('/:id', auth, async (req, res, next) => {
     
     const teacherId = req.user._id;
@@ -53,14 +54,17 @@ router.put('/:id', auth, async (req, res, next) => {
     res.send(notification);
 });
 
-/* Delete the course notification */
 
+// DELETE: Delete the course notification
 router.delete('/:id', auth, async (req, res, next) => {
+
     const teacherId = req.user._id;
 
     const notification = await Notification.findOneAndDelete({ _id: req.params.id, teacher: teacherId });
     if(!notification) return res.status(400).send({ message: 'Notification does not exist or does not belongs to you' });
 
     res.send(notification);
-})
+});
+
+
 module.exports = router;

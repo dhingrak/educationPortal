@@ -8,8 +8,7 @@ const admin = require('../middleware/admin');
 const bcrypt = require('bcrypt');
 
 
-/* POST: Verify the admin login credentials */
-
+// POST: Verify the admin login credentials
 router.post('/login', async (req, res, next) => {
     const { error } = validateLoginCredentials(req.body);
     if(error) return res.status(400).send(error.details[0].message);
@@ -29,8 +28,7 @@ router.post('/login', async (req, res, next) => {
 });
 
 
-/* POST: Upadting the password */
-
+// POST: Upadting the password 
 router.post('/updatePassword', auth, async(req, res, next) => {
 
     const userId = req.user._id;
@@ -47,7 +45,7 @@ router.post('/updatePassword', auth, async(req, res, next) => {
     res.send({ message: 'Password updated successfully' });
 });
 
-/* POST: Forget password route pending */
+// POST: Forget password route pending
 
 
 module.exports = router;

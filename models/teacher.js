@@ -108,10 +108,20 @@ function validateObjectId(id) {
     return Joi.validate(id, schema);
 }
 
+function validateUpdatedPassword(password) {
+    const schema = {
+        oldPassword: Joi.string().regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[~!@#$%^&*?])[a-zA-Z\d~!@#$%^&*?]{6,}$/).required(),
+        newPassword: Joi.string().regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[~!@#$%^&*?])[a-zA-Z\d~!@#$%^&*?]{6,}$/).required()
+    }
+    return Joi.validate(password, schema);
+}
+
+
 module.exports = {
     Teacher,
     validateTeacher,
     validateLoginCredentials,
     validateUpdateTeacher,
-    validateObjectId
+    validateObjectId,
+    validateUpdatedPassword
 }

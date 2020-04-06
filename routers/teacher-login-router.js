@@ -5,9 +5,10 @@ const { Teacher, validateLoginCredentials } = require('../models/teacher');
 const bcrypt = require('bcrypt');
 
 
-/* POST: Verify the teacher login credentials */
+// POST: Verify the teacher login credentials
 
 router.post('/', async (req, res, next) => {
+    
     const { error } = validateLoginCredentials(req.body);
     if(error) return res.status(400).send(error.details[0].message);
 

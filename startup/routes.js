@@ -31,7 +31,7 @@ module.exports = function(app){
     app.use('/api/teachers/login', teacherLogin);
     app.use('/api/teachers/courses', teacherCourses);
     app.use('/api/teachers/students', teacherStudnet);
-    app.use('/api/teachers', teacherDashboard);
+    app.use('/api/teachers/dashboard', teacherDashboard);
     app.use('/api/teachers/notification', teacherNotification);
 
     // Student routes
