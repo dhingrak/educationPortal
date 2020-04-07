@@ -5,18 +5,18 @@ The educationPortal API consists of three types of users (Admin, teacher, studen
 ## Admin
 
 An admin can create new user accounts i.e admin account, teacher and student.
-An admin can perform various operations on teacher user such as:- 
-  Create a new teacher user
-  Get all the teachers stored in the database
-  Get a particular teacher profile as per their id field
-  Update the profile of an existing teacher
-  Delete the profile of an existing teacher
-An admin can also perform similar functions on student user as well
-  Create a new student user
-  Get all the students enrolled in the system
-  Get an individual student profile
-  Update the profile of an existing user
-  Delete a student from a system and making sure the student will delete from other associated collections
+An admin can perform various operations on teacher user such as, 
+  create a new teacher user,
+  get all the teachers stored in the database,
+  get a particular teacher profile as per their id field,
+  update the profile of an existing teacher,
+  delete the profile of an existing teacher
+An admin can also perform similar functions on student user as well, 
+  create a new student user,
+  get all the students enrolled in the system,
+  get an individual student profile,
+  update the profile of an existing user,
+  delete a student from a system and making sure the student will delete from other associated collections
 
 ## Teacher 
 
