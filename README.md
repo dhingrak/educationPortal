@@ -3,7 +3,7 @@
 
 The educationPortal API consists of three types of users (Admin, teacher, student). Only the admin user has access to create new admins, teachers, and students. The API provides different access levels to users. 
 
-Admin functions:- 
+Admin features:- 
 
 An admin can create new user accounts i.e admin account, teacher and student.
 An admin can perform various operations on teacher user such as:- 
@@ -18,4 +18,20 @@ An admin can also perform similar functions on student user as well
   Get an individual student profile
   Update the profile of an existing user
   Delete a student from a system and making sure the student will delete from other associated collections
+
+
+Teacher features:- 
+A teacher can update their password
+A teacher can create a new course and also post new notifications or updates regarding their courses.
+A teacher has the functionality to get all the students enrolled in their courses.
+A teacher has the option to update the course and notifications as per their requirements and the student will get the email if there is any update to the course.
+
+Studnet features:- 
+
+A student can see their profile as well as can look for their enrolled courses on the dashboard
+The enrolled courses notifications feature provides the ability to get all the notifications from enrolled courses
+A student has the login feature as well as  can update their password
+A student can enroll in a course created by a student. At the moment there is no restriction on the student while registering for a course
+
+New fetures will be added to this educationPortal API
 
