@@ -20,16 +20,16 @@ An admin can also perform similar functions on student user as well,
 
 ## Teacher 
 
-A teacher can update their password
+A teacher can login to see the dashboard and has the ability to update the password.
 A teacher can create a new course and also post new notifications or updates regarding their courses.
 A teacher has the functionality to get all the students enrolled in their courses.
 A teacher has the option to update the course and notifications as per their requirements and the student will get the email if there is any update to the course.
 
 ## Studnet
 
-A student can see their profile as well as can look for their enrolled courses on the dashboard
-The enrolled courses notifications feature provides the ability to get all the notifications from enrolled courses
-A student has the login feature as well as  can update their password
+A student can see their profile as well as can look for their enrolled courses on the dashboard. 
+The enrolled courses notifications feature provides the ability to get all the notifications from enrolled courses.
+A student has the login feature as well as  can update their password.
 A student can enroll in a course created by a student. At the moment there is no restriction on the student while registering for a course
 
 ## Logger
