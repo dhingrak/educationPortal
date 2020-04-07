@@ -2,6 +2,7 @@ require('express-async-errors');
 const express = require('express');
 const router = express.Router();
 const { Teacher, validateTeacher, validateUpdateTeacher, validateObjectId } = require('../models/teacher');
+const { Course } = require('../models/course');
 const auth = require('../middleware/auth');
 const admin = require('../middleware/admin');
 const _ = require('lodash');
@@ -93,12 +94,23 @@ router.delete('/:id', [auth, admin], async (req, res, next) => {
     const { error } = validateObjectId({ id: req.params.id });
     if(error) return res.status(400).send('Invalid object id');
 
+    // Deleteing the teacher from the teacher collection
     let teacher = await Teacher.findOneAndDelete({ _id: req.params.id});
     if(!teacher) return res.status(400).send('Invalid teacher id');
-
+   
+    // Delete the teacher id from course collection but not course itself
+    if(teacher.courses.length > 0){
+        for(let i = 0; i < teacher.courses.length; i++ ) {
+            const courseId = teacher.courses[i];
+            const course = await Course.findOne({ _id: courseId });
+            course.teacher = "";
+            await course.save();
+        }
+    }
     teacher = _.pick(teacher, [ 'firstName', 'lastName', 'username', 'email', 'department' ])
-    res.send(teacher);
+    res.send({ message: 'Teacher deleted successfully', teacher });
 
 });
+
 
 module.exports = router;

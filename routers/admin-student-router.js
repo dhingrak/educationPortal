@@ -6,6 +6,8 @@ const admin = require('../middleware/admin');
 const _ = require('lodash');
 const bcrypt = require('bcrypt');
 const { Student, validateObjectId, validateStudent, validateUpdateStudent } = require('../models/student');
+const { Course } = require('../models/course');
+const { Teacher } = require('../models/teacher');
 
 
 // Only admin has the access to access these routers
@@ -32,7 +34,7 @@ router.get('/:id', [auth, admin], async (req, res, next) => {
 });
 
 
-// POST: Create a new student user
+// POST: Create a new student
 router.post('/', [auth, admin], async (req, res, next) => {
 
     const { error } = validateStudent(req.body);
@@ -54,7 +56,7 @@ router.post('/', [auth, admin], async (req, res, next) => {
 });
 
 
-// PUT: Update and existing student 
+// PUT: Update an existing student 
 router.put('/:id', [auth, admin], async (req, res, next) => {
 
     const validateId = validateObjectId({ id: req.params.id });
@@ -79,17 +81,38 @@ router.put('/:id', [auth, admin], async (req, res, next) => {
 
 
 // DELETE: Delete an existing student
+// Make sure the student will delete from the teacher as well as courses collection
 router.delete('/:id', [auth, admin], async (req, res, next) => {
 
     const validateId = validateObjectId({ id: req.params.id });
     if(validateId.error) return res.status(400).send('Invalid object id');
 
+    // Deleting the student from student collection
     let student = await Student.findByIdAndDelete({ _id: req.params.id});
     if(!student) return res.status(400).send('Invalid student id');
 
-    student = _.pick(student, ['firstName', 'lastName', 'username', 'email', 'phoneNumber']);
-    res.send(student)
+    if(student.enrolledCourses.length > 0){
+        for(let i=0; i < student.enrolledCourses.length; i++) {
 
+            // Deleteing the student from the courses collection
+            const courseId = student.enrolledCourses[i];
+            const course = await Course.findOne({ _id: courseId });
+            const courseIndex = course.enrolledStudents.indexOf(student._id);
+            course.enrolledStudents.splice(courseIndex, 1);
+            await course.save();
+
+            // Deleting the student from the teacher collection
+            let teacher = await Teacher.findOne({ _id: course.teacher });
+            if(teacher.students.includes(student._id)) {
+                const studentIndex = teacher.students.indexOf(student._id);
+                teacher.students.splice(studentIndex, 1);
+                await teacher.save();
+            }
+        }
+    }
+    student = _.pick(student, ['firstName', 'lastName', 'username', 'email', 'phoneNumber']);
+    res.send({ message: 'Student deleted successfully', student })
 });
+
 
 module.exports = router;

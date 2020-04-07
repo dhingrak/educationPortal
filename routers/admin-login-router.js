@@ -45,7 +45,5 @@ router.post('/updatePassword', auth, async(req, res, next) => {
     res.send({ message: 'Password updated successfully' });
 });
 
-// POST: Forget password route pending
-
 
 module.exports = router;

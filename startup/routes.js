@@ -5,7 +5,6 @@ const adminStudnetTasks = require('../routers/admin-student-router');
 
 const teacherLogin = require('../routers/teacher-login-router');
 const teacherCourses = require('../routers/teacher-courses-router');
-const teacherStudnet = require('../routers/teacher-student-router');
 const teacherDashboard = require('../routers/teacher-dashboard-router');
 const teacherNotification = require('../routers/teacher-notification-router');
 
@@ -30,7 +29,6 @@ module.exports = function(app){
     // Teacher routes
     app.use('/api/teachers/login', teacherLogin);
     app.use('/api/teachers/courses', teacherCourses);
-    app.use('/api/teachers/students', teacherStudnet);
     app.use('/api/teachers/dashboard', teacherDashboard);
     app.use('/api/teachers/notification', teacherNotification);
 

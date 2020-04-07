@@ -36,8 +36,6 @@ const studentSchema = new mongoose.Schema({
     },
     phoneNumber: {
         type: String,
-        minlength: 10,
-        maxlength: 20,
         required: true
     },
     password: {
