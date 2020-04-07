@@ -21,6 +21,7 @@ An admin can also perform similar functions on student user as well
 
 
 Teacher features:- 
+
 A teacher can update their password
 A teacher can create a new course and also post new notifications or updates regarding their courses.
 A teacher has the functionality to get all the students enrolled in their courses.
