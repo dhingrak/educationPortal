@@ -2,6 +2,14 @@
 
 The educationPortal API consists of three types of users (Admin, teacher, student). Only the admin user has access to create new admins, teachers, and students. The API provides different access levels to users. 
 
+## How to use
+
+1. Clone the repository to your local system. 
+2. Open the folder in the IDE (visual code in my case)
+3. Opent the terminal and type npm install
+4. Make sure the node and mongodb is already installed on your system, otherwise install the node and mongodb and follow the steps
+5. Create a config folder to manage the environment variables, please refer to config npm package
+
 ## Admin
 
 An admin can create new user accounts i.e admin account, teacher and student.
