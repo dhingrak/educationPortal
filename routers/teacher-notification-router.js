@@ -14,8 +14,6 @@ router.get('/', auth, async (req, res, next) => {
    
 });
 
-// TODO: Get all the notifications against a particular course 
-
 
 // POST: Creating a notification against a course 
 router.post('/', auth, async (req, res, next) => {

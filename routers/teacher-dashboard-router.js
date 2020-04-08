@@ -17,8 +17,6 @@ router.get('/me', auth, async(req, res, next) => {
 
 // PUT: Updating the teacher profile
 router.put('/:id', auth, async (req, res, next) => {
-
-    // TODO: Need to combine the URL and body validations in one function
     const validateId = validateObjectId({ id: req.params.id });
     if(validateId.error) return res.status(400).send('Invalid object id');
 

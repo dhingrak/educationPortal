@@ -23,8 +23,6 @@ router.get('/' , [auth, admin], async (req, res, next) => {
     res.send(teachers);
 });
 
-// TODO: Need to add more filters on the Teacher extraction
-
 
 // GET: Get the profile of an existing teacher
 router.get('/:id', [auth, admin], async (req, res, next) => {
@@ -64,7 +62,6 @@ router.post('/', [auth, admin], async (req, res, next) => {
 // PUT: Updating an existing Teacher user
 router.put('/:id', [auth, admin], async (req, res, next) => {
 
-    // TODO: Need to combine the URL and body validations in one function
     const validateId = validateObjectId({ id: req.params.id });
     if(validateId.error) return res.status(400).send('Invalid object id');
 

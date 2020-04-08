@@ -8,8 +8,8 @@ const admin = require('../middleware/admin');
 const bcrypt = require('bcrypt');
 
 
-// POST: Verify the admin login credentials
-router.post('/login', async (req, res, next) => {
+// POST: Admin Login
+router.post('/', async (req, res, next) => {
     const { error } = validateLoginCredentials(req.body);
     if(error) return res.status(400).send(error.details[0].message);
 
@@ -17,7 +17,6 @@ router.post('/login', async (req, res, next) => {
     if(!user) return res.status(400).send({ message: 'Invalid username or password'});
 
     const validatePassword = await bcrypt.compare(req.body.password, user.password);
-    //console.log(validatePassword)
 
     if(!validatePassword) {
         return res.status(400).send({ message: 'Invalid username or password' });

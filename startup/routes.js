@@ -22,7 +22,7 @@ module.exports = function(app){
 
     // Admin routes
     app.use('/api/admin/register', adminRegister);
-    app.use('/api/admin', adminLogin);
+    app.use('/api/admin/login', adminLogin);
     app.use('/api/admin/teachers', adminTeacherTasks);
     app.use('/api/admin/students', adminStudnetTasks);
     

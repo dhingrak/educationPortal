@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const Joi = require('joi');
-const { Student } = require('../models/student');
+
 
 const courseSchema = new mongoose.Schema({
     courseName: {
