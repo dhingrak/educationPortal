@@ -1,4 +1,4 @@
-# educationPortal
+# Education Portal
 
 The educationPortal API consists of three types of users (Admin, teacher, and student). Only the admin user has access to create new admins, teachers, and students. The API provides different access levels to users. 
 
